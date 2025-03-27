@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>b1ss34</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 400px;
+        margin: auto;
+        text-align: center;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      li {
+        background: #f4f4f4;
+        padding: 10px;
+        margin: 5px 0;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      button {
+        margin-left: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>To-Do List K24</h2>
+    <input type="text" id="taskInput" placeholder="Nhập công việc" />
+    <button onclick="addTask()">Thêm</button>
+    <ul id="taskList"></ul>
+    <script>
+      //lấy ra mảng chứa danh sách
+      let todoList = JSON.parse(localStorage.getItem("list")) || [];
+      // hàm hiển thị danh sách
+      function renderTodo() {
+        let ul = document.getElementById("taskList");
+        ul.innerHTML = "";
+        todoList.forEach((element, index) => {
+          let li = document.createElement("li");
+          li.innerHTML = `${element}<span><button onclick="editTodo(${index})">Sửa</button><button onclick="deleteTodo(${index})">Xoá</button></span>`;
+          ul.appendChild(li);
+        });
+      }
+      // hàm thêm danh sách
+      function addTask() {
+        let input = document.getElementById("taskInput");
+        let inputValue = input.value.trim();
+        if (inputValue === "") {
+          alert("Công việc không được để trống ");
+          return;
+        }
+        todoList.push(inputValue);
+        localStorage.setItem("list", JSON.stringify(todoList));
+        input.value = "";
+        renderTodo();
+      }
+      // hàm xoá danh sách
+      function deleteTodo(index) {
+        let check = confirm("bạn có xác nhận muốn xoá không");
+        if (check) {
+          todoList.splice(index, 1);
+          localStorage.setItem("list", JSON.stringify(todoList));
+          renderTodo();
+        }
+      }
+      // hàm sửa danh sách
+      function editTodo(index) {
+        let newValue = prompt("Nhập nội dung mới", todoList[index]);
+        if (newValue === null || newValue.trim() === "") {
+          return;
+        }
+        todoList[index] = newValue.trim();
+        localStorage.setItem("list", JSON.stringify(todoList));
+        renderTodo();
+      }
+      renderTodo();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>b2ss34</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css
+    "
+    />
+    <style>
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+      }
+      #container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Button trigger modal -->
+      <button
+        type="button"
+        class="btn btn-info"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        ADD BOOKMARK
+      </button>
+      <div
+        id="container"
+        class="d-flex flex-wrap justify-content-around gap-3"
+      ></div>
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div
+              class="modal-header"
+              style="background-color: blueviolet; color: white"
+            >
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Add BookMark
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div class="modal-body">
+              <form onsubmit="addBookMark(event)">
+                <div class="mb-3">
+                  <label
+                    for="exampleInputEmail1"
+                    class="form-label"
+                    style="color: blueviolet"
+                    >Website Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="exampleInputEmail1"
+                    aria-describedby="emailHelp"
+                    style="border: 2px solid blueviolet"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label
+                    for="exampleInputPassword1"
+                    class="form-label"
+                    style="color: blueviolet"
+                    >Website URL</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="exampleInputPassword1"
+                    style="border: 2px solid blueviolet"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  style="
+                    background-color: blueviolet;
+                    color: white;
+                    border: none;
+                    width: 100px;
+                  "
+                >
+                  Save
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let bookMarkList = JSON.parse(localStorage.getItem("bookList")) || [];
+      // hàm hiển thị danh sách
+      function renderTodo() {
+        let container = document.getElementById("container");
+        container.innerHTML = "";
+        bookMarkList.forEach((element, index) => {
+          let div = document.createElement("div");
+          div.className = "card p-2";
+          div.style.width = "18rem";
+
+          div.innerHTML = `
+                          <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="m-0">${element.name}</h5>
+                            <button type="button" class="btn-close" onclick="deleteBookmark(${index})"></button>
+                          </div>
+                          <div class="card-body">
+                            <a href="${element.url}" class="btn btn-primary w-100" target="_blank">Visit</a>
+                          </div>
+                        `;
+
+          container.appendChild(div);
+        });
+      }
+      // hàm thêm bookMark
+      function addBookMark(e) {
+        e.preventDefault();
+        let wedName = document.getElementById("exampleInputEmail1").value;
+        let wedUrl = document.getElementById("exampleInputPassword1").value;
+        if (!wedName || !wedUrl) return;
+        bookMarkList.push({ name: wedName, url: wedUrl });
+        localStorage.setItem("bookList", JSON.stringify(bookMarkList));
+        document.getElementById("exampleInputEmail1").value = "";
+        document.getElementById("exampleInputPassword1").value = "";
+        renderTodo();
+        let modalElement = document.getElementById("exampleModal");
+        let modal = bootstrap.Modal.getInstance(modalElement);
+        modal.hide();
+      }
+      // xoá phần tử
+      function deleteBookmark(index) {
+        bookMarkList.splice(index, 1);
+        localStorage.setItem("bookList", JSON.stringify(bookMarkList));
+        renderTodo();
+      }
+
+      renderTodo();
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
